@@ -5,6 +5,21 @@ All notable changes to the Zoho Email Integration skill will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.2] - 2026-01-29
+
+### 📝 Documentation - Updated SKILL.md Introduction
+
+**Updated skill description to accurately reflect v2.0 capabilities:**
+
+#### Changed
+- **Updated intro** - Changed outdated "IMAP/SMTP only" description to highlight OAuth2 and REST API features
+- **Reorganized features** - Grouped into Authentication & Performance, Email Operations, Batch & Bulk Operations, Security
+- **Emphasized performance** - Highlighted 5-10x speed improvement with REST API mode
+- **Corrected installation** - Fixed package name from `zoho-email` to `zoho-email-integration`
+- **Added requirements** - Listed Python 3.x, requests library, and Zoho Mail account
+
+This ensures users immediately see the modern features (OAuth2, REST API, HTML, batch ops) instead of the old v1.0 IMAP/SMTP-only description.
+
 ## [2.0.1] - 2026-01-29
 
 ### 🐛 Fixed - REST API Batch Operations

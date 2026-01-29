@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🐛 Fixed - REST API Batch Operations
 
-**Critical bug fixes for REST API mode:**
+**Critical bug fixes for REST API mode + updated documentation:**
 
 #### Fixed
 - **Mark as read/unread operations** - Fixed 404 errors by using correct `/updatemessage` endpoint with `mode` parameter
@@ -28,6 +28,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Delete endpoint now uses `DELETE /accounts/{id}/folders/{folderId}/messages/{id}`
 - All message IDs converted to integers for API compatibility
 - Added folder caching via `list_folders()` for efficient lookups
+
+#### Documentation
+- **Updated roadmap** - Marked OAuth2, REST API, attachments, HTML emails, and batch operations as completed
+- **Added future enhancements** - Listed realistic future features (threading, labels, webhooks, scheduled sends, etc.)
+- **Cleaned up repository** - Removed 29 internal development docs, keeping only essential user-facing files
 
 See [FIXES_COMPLETE.md](FIXES_COMPLETE.md) for detailed technical documentation.
 

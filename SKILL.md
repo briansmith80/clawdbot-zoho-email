@@ -6,25 +6,46 @@ homepage: https://github.com/briansmith80/clawdbot-zoho-email
 
 # Zoho Email Integration
 
-Full-featured Zoho Mail integration using IMAP for reading and SMTP for sending emails. No API setup required—just provide your Zoho credentials and start automating email workflows.
+**v2.0** - Complete Zoho Mail integration with OAuth2 authentication and REST API backend (5-10x faster than IMAP/SMTP). Supports HTML emails, attachments, batch operations, and advanced automation workflows.
+
+Choose your authentication: OAuth2 (recommended, secure) or app password (simple setup).
 
 ## ✨ Features
 
-- **📥 Read emails** - Fetch emails from any folder (Inbox, Sent, etc.)
-- **🔍 Search emails** - Search by subject, sender, date ranges
-- **📊 Monitor inbox** - Check unread count for notifications
-- **📤 Send emails** - Send via SMTP with CC/BCC support
-- **📎 Attachments** - Download and send email attachments
-- **📁 Full folder access** - Access all IMAP folders
-- **🔒 Secure** - Uses environment variables for credentials
+### 🔐 Authentication & Performance
+- **OAuth2 authentication** - Secure token-based auth with automatic refresh
+- **REST API backend** - 5-10x faster operations than IMAP/SMTP
+- **Graceful fallback** - Automatically falls back to IMAP if REST API unavailable
+- **App password support** - Simple alternative to OAuth2
+
+### 📧 Email Operations
+- **📥 Read emails** - Fetch from any folder (Inbox, Sent, Drafts, etc.)
+- **🔍 Smart search** - Search by subject, sender, keywords with REST API speed
+- **📊 Monitor inbox** - Real-time unread count for notifications
+- **📤 Send emails** - Plain text or HTML with CC/BCC support
+- **🎨 HTML emails** - Rich formatting with professional templates included
+- **📎 Attachments** - Send and download file attachments
+
+### ⚡ Batch & Bulk Operations
+- **Batch operations** - Mark, delete, or move multiple emails efficiently
+- **Bulk actions** - Search and act on hundreds of emails at once
+- **Dry-run mode** - Preview actions before executing for safety
+
+### 🔒 Security
+- **No hardcoded credentials** - OAuth2 tokens or environment variables only
+- **Automatic token refresh** - Seamless token renewal
+- **Encrypted connections** - SSL/TLS for all operations
 
 ## 📦 Installation
 
 ```bash
-clawdhub install zoho-email
+clawdhub install zoho-email-integration
 ```
 
-Or manually copy the skill to your workspace `skills/` directory.
+**Requirements:**
+- Python 3.x
+- `requests` library (install: `pip3 install requests`)
+- Zoho Mail account
 
 ## ⚙️ Setup
 

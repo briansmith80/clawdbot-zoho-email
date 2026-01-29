@@ -1,9 +1,9 @@
 # Zoho Email Integration for Clawdbot
 
-[![GitHub](https://img.shields.io/badge/GitHub-clawdbot--zoho--email-blue?logo=github)](https://github.com/YOUR-USERNAME/clawdbot-zoho-email)
+[![GitHub](https://img.shields.io/badge/GitHub-clawdbot--zoho--email-blue?logo=github)](https://github.com/briansmith80/clawdbot-zoho-email)
 [![ClawdHub](https://img.shields.io/badge/ClawdHub-Install-green)](https://clawdhub.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-2.0.0-blue)](https://github.com/YOUR-USERNAME/clawdbot-zoho-email/releases)
+[![Version](https://img.shields.io/badge/version-2.0.0-blue)](https://github.com/briansmith80/clawdbot-zoho-email/releases)
 
 **v2.0.0** - Complete Zoho Mail integration with OAuth2, REST API backend, and advanced email automation features. Perfect for email workflows, monitoring, and bulk operations in your Clawdbot projects.
 
@@ -155,9 +155,9 @@ See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
 Contributions are welcome! Here's how you can help:
 
-- 🐛 **Report bugs:** [Open an issue](https://github.com/YOUR-USERNAME/clawdbot-zoho-email/issues)
-- 💡 **Request features:** [Open an issue](https://github.com/YOUR-USERNAME/clawdbot-zoho-email/issues)
-- 🔧 **Submit PRs:** [Pull requests](https://github.com/YOUR-USERNAME/clawdbot-zoho-email/pulls)
+- 🐛 **Report bugs:** [Open an issue](https://github.com/briansmith80/clawdbot-zoho-email/issues)
+- 💡 **Request features:** [Open an issue](https://github.com/briansmith80/clawdbot-zoho-email/issues)
+- 🔧 **Submit PRs:** [Pull requests](https://github.com/briansmith80/clawdbot-zoho-email/pulls)
 - ⭐ **Star the repo:** Show your support!
 
 This is an open-source Clawdbot skill maintained by the community.

@@ -1,10 +1,11 @@
 ---
-name: zoho-email
-description: Complete Zoho Mail integration for reading, searching, monitoring, and sending emails via IMAP/SMTP. Perfect for email automation, monitoring, and notifications.
-version: 1.0.0
-author: Clawdbot Community
-tags: [email, zoho, imap, smtp, automation, monitoring, notifications]
+name: zoho-email-integration
+description: Complete Zoho Mail integration with OAuth2, REST API (5-10x faster), HTML emails, attachments, and batch operations. Perfect for email automation and workflows.
+version: 2.0.0
+author: Brian Smith (@briansmith80)
+tags: [email, zoho, oauth2, rest-api, automation, html-emails, batch-operations, attachments]
 license: MIT
+repository: https://github.com/briansmith80/clawdbot-zoho-email
 ---
 
 # Zoho Email Integration

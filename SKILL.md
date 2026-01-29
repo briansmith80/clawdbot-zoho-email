@@ -458,12 +458,26 @@ export ZOHO_PASSWORD="your-app-password"
 
 ## 🛣️ Roadmap
 
-- [ ] **Zoho Mail REST API** - Migration from IMAP/SMTP for better functionality
-- [ ] Attachment support (download/send)
-- [x] **HTML email composition** - ✅ Completed!
-- [ ] Email threading/conversations
-- [ ] Draft email management
-- [ ] Zoho Calendar integration
+### ✅ Completed (v2.0.0)
+
+- [x] **OAuth2 authentication** - Secure token-based auth with auto-refresh
+- [x] **Zoho Mail REST API** - 5-10x faster than IMAP/SMTP
+- [x] **Attachment support** - Download and send attachments
+- [x] **HTML email composition** - Rich formatting with templates
+- [x] **Batch operations** - Mark, delete, move multiple emails
+- [x] **Bulk actions** - Search and act on many emails at once
+
+### 🔮 Future Enhancements
+
+- [ ] **Email threading/conversations** - Group related emails together
+- [ ] **Label management** - Create and manage Zoho Mail labels
+- [ ] **Draft email management** - Create, edit, and send drafts
+- [ ] **Scheduled sends** - Schedule emails to send later
+- [ ] **Email templates** - Reusable email templates with variables
+- [ ] **Webhooks** - Real-time notifications for new emails
+- [ ] **Advanced search** - Filter by size, has-attachment, date ranges
+- [ ] **Zoho Calendar integration** - Create events from emails
+- [ ] **Zoho CRM integration** - Sync contacts and activities
 
 ## 📝 Notes
 

@@ -7,22 +7,41 @@
 
 **v2.0.2** - Complete Zoho Mail integration with OAuth2, REST API backend (5-10x faster), and advanced email automation features. Perfect for email workflows, monitoring, and bulk operations in your Clawdbot projects.
 
-## 🚀 Quick Start
+## 🚀 Quick Start (recommended path)
 
 ```bash
-# Install from MoltHub
+# 1) Install
 clawdhub install zoho-email
+cd zoho-email  # (or wherever ClawdHub installed it)
 
-# Option 1: OAuth2 (recommended - more secure)
+# 2) Install Python deps (needed for REST API mode)
+pip3 install -r requirements.txt
+
+# 3) Set your mailbox (required for both OAuth + app-password modes)
+export ZOHO_EMAIL="your-email@domain.com"
+
+# 4) OAuth2 setup (recommended: enables REST API + auto token refresh)
 python3 scripts/oauth-setup.py
 
-# Option 2: App password (simple)
-export ZOHO_EMAIL="your-email@domain.com"
-export ZOHO_PASSWORD="your-app-specific-password"
+# 5) Sanity-check everything
+python3 scripts/zoho-email.py doctor
 
-# Test connection
+# 6) Test
 python3 scripts/zoho-email.py unread
 ```
+
+### Quick Start (app-password mode)
+If you don’t want OAuth2 yet:
+
+```bash
+export ZOHO_EMAIL="your-email@domain.com"
+export ZOHO_PASSWORD="your-app-specific-password"
+python3 scripts/zoho-email.py doctor
+python3 scripts/zoho-email.py unread --api-mode imap
+```
+
+**OAuth token location (default):** `~/.clawdbot/zoho-mail-tokens.json`
+
 
 ## ✨ Features
 
@@ -46,12 +65,35 @@ python3 scripts/zoho-email.py unread
 
 - **[SKILL.md](SKILL.md)** - Complete guide with examples
 - **[OAUTH2_SETUP.md](OAUTH2_SETUP.md)** - OAuth2 setup instructions
-- **[REST_API_MIGRATION.md](REST_API_MIGRATION.md)** - REST API features and migration
-- **[BATCH_FEATURE.md](BATCH_FEATURE.md)** - Batch operations guide
-- **[HTML_FEATURE.md](HTML_FEATURE.md)** - HTML email documentation
-- **[ATTACHMENT_FEATURE.md](ATTACHMENT_FEATURE.md)** - Attachment handling guide
+- **[CHANGELOG.md](CHANGELOG.md)** - Version history
 
 ## 📖 Quick Examples
+
+### Most common Clawdbot-style actions
+```bash
+# Unread count (fast, good for briefings)
+python3 scripts/zoho-email.py unread
+
+# Search inbox
+python3 scripts/zoho-email.py search "invoice"
+
+# Read a specific email (folder + id)
+python3 scripts/zoho-email.py get INBOX <id>
+
+# Send a simple email
+python3 scripts/zoho-email.py send recipient@example.com "Subject" "Body text"
+
+# Empty Spam (safe by default: DRY RUN)
+python3 scripts/zoho-email.py empty-spam
+# Execute for real
+python3 scripts/zoho-email.py empty-spam --execute
+
+# Empty Trash (safe by default: DRY RUN)
+python3 scripts/zoho-email.py empty-trash
+# Execute for real
+python3 scripts/zoho-email.py empty-trash --execute
+```
+
 
 ### Basic Operations
 ```bash
@@ -120,6 +162,14 @@ python3 scripts/zoho-email.py unread --api-mode rest --verbose
 python3 scripts/zoho-email.py unread --api-mode imap
 ```
 
+## 🧩 Clawdbot command wrapper (optional)
+
+If you want a simple "command-style" wrapper script for Clawdbot (e.g., `/emails`), see:
+
+- `examples/clawdbot-commands/emails.sh`
+
+It’s intentionally minimal and safe (dry-run by default for destructive actions).
+
 ## 💡 Use Cases
 
 - **Morning briefings** - Automated unread email summaries
@@ -138,8 +188,8 @@ python3 scripts/zoho-email.py unread --api-mode imap
 - Zoho Mail account
 - App-specific password OR OAuth2 setup
 
-**Optional (for REST API):**
-- `requests>=2.31.0` (install: `pip install requests`)
+**Optional (for REST API mode):**
+- `requests>=2.31.0` (install: `pip3 install -r requirements.txt`)
 - OAuth2 credentials (automatic 5-10x performance boost)
 
 ## 📦 Version History

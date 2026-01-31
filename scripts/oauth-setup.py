@@ -14,7 +14,7 @@ from urllib.parse import urlencode, parse_qs, urlparse
 import time
 
 # Default token storage path
-DEFAULT_TOKEN_PATH = os.path.expanduser('~/.zoho-mail-tokens.json')
+DEFAULT_TOKEN_PATH = os.path.expanduser('~/.clawdbot/zoho-mail-tokens.json')
 
 # Zoho OAuth2 endpoints
 ZOHO_AUTH_URL = 'https://accounts.zoho.com/oauth/v2/auth'

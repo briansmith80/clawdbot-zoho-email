@@ -32,7 +32,7 @@ content = content.replace(
 oauth_settings = '''
 
 # OAuth2 settings
-DEFAULT_TOKEN_PATH = os.path.expanduser('~/.zoho-mail-tokens.json')
+DEFAULT_TOKEN_PATH = os.path.expanduser('~/.clawdbot/zoho-mail-tokens.json')
 ZOHO_TOKEN_URL = 'https://accounts.zoho.com/oauth/v2/token'
 '''
 

@@ -1,5 +1,5 @@
 ---
-name: zoho-email-integration
+name: zoho-email
 description: Complete Zoho Mail integration with OAuth2, REST API (5-10x faster), HTML emails, attachments, and batch operations. Perfect for email automation and workflows.
 homepage: https://github.com/briansmith80/clawdbot-zoho-email
 ---
@@ -39,7 +39,7 @@ Choose your authentication: OAuth2 (recommended, secure) or app password (simple
 ## 📦 Installation
 
 ```bash
-clawdhub install zoho-email-integration
+clawdhub install zoho-email
 ```
 
 **Requirements:**
@@ -103,6 +103,35 @@ Expected output:
 ## 🚀 Usage
 
 All commands require credentials set via environment variables.
+
+### Quick commands (common tasks)
+
+```bash
+# Diagnose setup (recommended first step)
+python3 scripts/zoho-email.py doctor
+
+# Unread count (great for briefings)
+python3 scripts/zoho-email.py unread
+
+# Search inbox
+python3 scripts/zoho-email.py search "invoice"
+
+# Get a specific email (folder + id)
+python3 scripts/zoho-email.py get INBOX <id>
+
+# Send a simple email
+python3 scripts/zoho-email.py send recipient@example.com "Subject" "Body text"
+
+# Empty Spam (safe by default: DRY RUN)
+python3 scripts/zoho-email.py empty-spam
+# Execute for real
+python3 scripts/zoho-email.py empty-spam --execute
+
+# Empty Trash (safe by default: DRY RUN)
+python3 scripts/zoho-email.py empty-trash
+# Execute for real
+python3 scripts/zoho-email.py empty-trash --execute
+```
 
 ### Send HTML Emails
 
@@ -519,7 +548,7 @@ MIT License - free to use, modify, and distribute.
 
 **Created:** 2026-01-29  
 **Status:** Production-ready ✅  
-**Requires:** Python 3.x (standard library only)
+**Requires:** Python 3.x. For REST API mode: `pip install -r requirements.txt` (includes `requests`).
 
 ## 🔄 Batch Operations
 

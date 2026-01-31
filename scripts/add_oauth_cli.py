@@ -76,7 +76,7 @@ if marker in content:
         print("  Revoke tokens:   python3 zoho-email.py oauth-revoke [--token-file path]")
         print("\\nAuthentication:")
         print("  --auth <method>      Authentication method: 'auto' (default), 'password', or 'oauth2'")
-        print("  --token-file <path>  OAuth2 token file path (default: ~/.zoho-mail-tokens.json)")
+        print("  --token-file <path>  OAuth2 token file path (default: ~/.clawdbot/zoho-mail-tokens.json)")
         print("\\nOptions:")'''
     )
     

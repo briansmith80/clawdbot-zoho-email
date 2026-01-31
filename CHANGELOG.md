@@ -5,6 +5,19 @@ All notable changes to the Zoho Email Integration skill will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.3] - 2026-01-31
+
+### ✅ UX / Quality of Life
+- **ClawdHub-friendly naming**: aligned docs + skill metadata to `clawdhub install zoho-email`
+- **`--help` without configuration**: help no longer requires credentials/tokens
+- **`doctor` command**: first-run diagnostics (env vars, token file, REST reachability, IMAP/SMTP reachability)
+- **Standardised token location**: default is now `~/.clawdbot/zoho-mail-tokens.json`
+- **Convenience cleanup commands**:
+  - `empty-spam` (dry-run by default, `--execute` to run)
+  - `empty-trash` (dry-run by default, `--execute` to run)
+- **Docs cleanup**: removed broken README links, added practical quick start + common task commands
+- **Clawdbot wrapper example**: added `examples/clawdbot-commands/emails.sh`
+
 ## [2.0.2] - 2026-01-29
 
 ### 📝 Documentation - Updated SKILL.md Introduction
@@ -15,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Updated intro** - Changed outdated "IMAP/SMTP only" description to highlight OAuth2 and REST API features
 - **Reorganized features** - Grouped into Authentication & Performance, Email Operations, Batch & Bulk Operations, Security
 - **Emphasized performance** - Highlighted 5-10x speed improvement with REST API mode
-- **Corrected installation** - Fixed package name from `zoho-email` to `zoho-email-integration`
+- **Corrected installation** - Fixed package name references (current install slug: `zoho-email`)
 - **Added requirements** - Listed Python 3.x, requests library, and Zoho Mail account
 
 This ensures users immediately see the modern features (OAuth2, REST API, HTML, batch ops) instead of the old v1.0 IMAP/SMTP-only description.
@@ -130,7 +143,7 @@ See [FIXES_COMPLETE.md](FIXES_COMPLETE.md) for detailed technical documentation.
 ### Added - OAuth2 Features
 - **OAuth2 authorization code flow** - Interactive browser-based login
 - **Automatic token refresh** - Access tokens refresh automatically when expired
-- **Secure token storage** - Tokens stored in `~/.zoho-mail-tokens.json` with 600 permissions
+- **Secure token storage** - Tokens stored in `~/.clawdbot/zoho-mail-tokens.json` with 600 permissions
 - **Token management CLI** - Commands to check status, refresh, and revoke tokens
 - **IMAP XOAUTH2 support** - OAuth2 authentication for IMAP connections
 - **SMTP XOAUTH2 support** - OAuth2 authentication for SMTP connections
@@ -144,7 +157,7 @@ See [FIXES_COMPLETE.md](FIXES_COMPLETE.md) for detailed technical documentation.
 
 ### Added - New CLI Flags
 - `--auth <method>` - Specify authentication method: 'auto' (default), 'password', or 'oauth2'
-- `--token-file <path>` - Custom OAuth2 token file path (default: ~/.zoho-mail-tokens.json)
+- `--token-file <path>` - Custom OAuth2 token file path (default: ~/.clawdbot/zoho-mail-tokens.json)
 
 ### Added - OAuth2 Setup Tool
 - `scripts/oauth-setup.py` - Interactive OAuth2 setup wizard
@@ -201,7 +214,7 @@ See [FIXES_COMPLETE.md](FIXES_COMPLETE.md) for detailed technical documentation.
 
 ### Known Limitations
 - Initial setup requires a browser for authorization
-- Token file must be stored locally (default: `~/.zoho-mail-tokens.json`)
+- Token file must be stored locally (default: `~/.clawdbot/zoho-mail-tokens.json`)
 - Tokens stored in plaintext (with 600 permissions - encryption recommended for high-security environments)
 - Zoho-specific OAuth2 implementation
 

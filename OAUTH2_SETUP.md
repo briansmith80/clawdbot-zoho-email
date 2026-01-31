@@ -51,7 +51,7 @@ python3 scripts/oauth-setup.py
 
 The script will:
 1. Prompt for your Client ID and Client Secret
-2. Ask where to store tokens (default: `~/.zoho-mail-tokens.json`)
+2. Ask where to store tokens (default: `~/.clawdbot/zoho-mail-tokens.json`)
 3. Open your browser for authorization
 4. Wait for you to log in and authorize the application
 5. Save tokens securely (permissions: 600)
@@ -195,7 +195,7 @@ To fully revoke access from Zoho's side:
 
 ### Location
 
-Default: `~/.zoho-mail-tokens.json`
+Default: `~/.clawdbot/zoho-mail-tokens.json`
 
 Custom:
 ```bash
@@ -262,7 +262,7 @@ python3 scripts/oauth-setup.py refresh
 **If refresh fails:**
 ```bash
 # Delete old tokens and set up again
-rm ~/.zoho-mail-tokens.json
+rm ~/.clawdbot/zoho-mail-tokens.json
 python3 scripts/oauth-setup.py
 ```
 
@@ -294,7 +294,7 @@ ZOHO_SCOPES = [
 ## Security Best Practices
 
 ### DO:
-✅ Store tokens in your home directory (`~/.zoho-mail-tokens.json`)  
+✅ Store tokens in your home directory (`~/.clawdbot/zoho-mail-tokens.json`)  
 ✅ Use file permissions 600 (owner read/write only)  
 ✅ Add token files to `.gitignore`  
 ✅ Regularly review authorized apps in Zoho settings  
@@ -314,15 +314,15 @@ ZOHO_SCOPES = [
 
 ```bash
 # Encrypt token file with GPG
-gpg -c ~/.zoho-mail-tokens.json
-rm ~/.zoho-mail-tokens.json
+gpg -c ~/.clawdbot/zoho-mail-tokens.json
+rm ~/.clawdbot/zoho-mail-tokens.json
 
 # Decrypt when needed
-gpg -d ~/.zoho-mail-tokens.json.gpg > ~/.zoho-mail-tokens.json
+gpg -d ~/.clawdbot/zoho-mail-tokens.json.gpg > ~/.clawdbot/zoho-mail-tokens.json
 # Use the skill
 python3 scripts/zoho-email.py unread
 # Remove decrypted file
-shred -u ~/.zoho-mail-tokens.json
+shred -u ~/.clawdbot/zoho-mail-tokens.json
 ```
 
 #### Use Separate OAuth Client per Environment
@@ -412,10 +412,10 @@ export ZOHO_EMAIL="ci-bot@company.com"
 export ZOHO_PASSWORD="app-password"
 
 # Option 2: Store token file as secret
-# Upload ~/.zoho-mail-tokens.json as CI/CD secret
+# Upload ~/.clawdbot/zoho-mail-tokens.json as CI/CD secret
 # Restore in build:
-echo "$ZOHO_TOKENS_JSON" > ~/.zoho-mail-tokens.json
-chmod 600 ~/.zoho-mail-tokens.json
+echo "$ZOHO_TOKENS_JSON" > ~/.clawdbot/zoho-mail-tokens.json
+chmod 600 ~/.clawdbot/zoho-mail-tokens.json
 ```
 
 ## Additional Resources
@@ -432,7 +432,7 @@ chmod 600 ~/.zoho-mail-tokens.json
   ```bash
   python3 scripts/zoho-email.py oauth-status --verbose
   ```
-- Check token file permissions: `ls -l ~/.zoho-mail-tokens.json`
+- Check token file permissions: `ls -l ~/.clawdbot/zoho-mail-tokens.json`
 - Verify ZOHO_EMAIL is set: `echo $ZOHO_EMAIL`
 
 ---

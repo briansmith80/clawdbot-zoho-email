@@ -32,7 +32,7 @@ SMTP_PORT = int(os.environ.get('ZOHO_SMTP_PORT', '465'))
 
 
 # OAuth2 settings
-DEFAULT_TOKEN_PATH = os.path.expanduser('~/.zoho-mail-tokens.json')
+DEFAULT_TOKEN_PATH = os.path.expanduser('~/.clawdbot/zoho-mail-tokens.json')
 ZOHO_TOKEN_URL = 'https://accounts.zoho.com/oauth/v2/token'
 # Timeouts
 IMAP_TIMEOUT = int(os.environ.get('ZOHO_TIMEOUT', '30'))
@@ -1679,6 +1679,8 @@ if __name__ == "__main__":
         print("  Mark as unread:  python3 zoho-email.py mark-unread <folder> <id1> <id2> ...")
         print("  Delete emails:   python3 zoho-email.py delete <folder> <id1> <id2> ...")
         print("  Move emails:     python3 zoho-email.py move <source_folder> <target_folder> <id1> <id2> ...")
+        print("  Empty Spam:      python3 zoho-email.py empty-spam [--dry-run] [--execute]")
+        print("  Empty Trash:     python3 zoho-email.py empty-trash [--dry-run] [--execute]")
         print("  Bulk action:     python3 zoho-email.py bulk-action --folder INBOX --search 'SUBJECT \"spam\"' --action mark-read [--dry-run]")
         print("\nOAuth2 Commands:")
         print("  Setup OAuth2:    python3 scripts/oauth-setup.py")
@@ -1687,7 +1689,7 @@ if __name__ == "__main__":
         print("  Revoke tokens:   python3 zoho-email.py oauth-revoke [--token-file path]")
         print("\nAuthentication:")
         print("  --auth <method>      Authentication method: 'auto' (default), 'password', or 'oauth2'")
-        print("  --token-file <path>  OAuth2 token file path (default: ~/.zoho-mail-tokens.json)")
+        print("  --token-file <path>  OAuth2 token file path (default: ~/.clawdbot/zoho-mail-tokens.json)")
         print("\nAPI Mode:")
         print("  --api-mode <mode>    API mode: 'auto' (default), 'rest', or 'imap'")
         print("                       'auto': Use REST API if available, fallback to IMAP")
@@ -1704,7 +1706,147 @@ if __name__ == "__main__":
         sys.exit(1)
     
     command = sys.argv[1]
-    
+
+    # Help (should never require credentials)
+    if command in ("--help", "-h", "help"):
+        # Re-run the no-args help text, but exit 0.
+        sys.argv = [sys.argv[0]]
+        print("Zoho Email CLI")
+        print("\nBasic Usage:")
+        print("  Search sent:     python3 zoho-email.py search-sent 'keyword'")
+        print("  Search inbox:    python3 zoho-email.py search 'keyword'")
+        print("  Get unread:      python3 zoho-email.py unread")
+        print("  Get email:       python3 zoho-email.py get <folder> <id>")
+        print("  Send:            python3 zoho-email.py send <to> <subject> <body> [--attach file1] [--attach file2]")
+        print("  Send HTML:       python3 zoho-email.py send-html <to> <subject> <html_file_or_text>")
+        print("  Preview HTML:    python3 zoho-email.py preview-html <html_file_or_text>")
+        print("  Doctor:          python3 zoho-email.py doctor")
+        print("\nAttachments:")
+        print("  List attachments: python3 zoho-email.py list-attachments <folder> <email_id>")
+        print("  Download:        python3 zoho-email.py download-attachment <folder> <email_id> <index> [output_path]")
+        print("\nBatch Operations:")
+        print("  Mark as read:    python3 zoho-email.py mark-read <folder> <id1> <id2> ...")
+        print("  Mark as unread:  python3 zoho-email.py mark-unread <folder> <id1> <id2> ...")
+        print("  Delete emails:   python3 zoho-email.py delete <folder> <id1> <id2> ...")
+        print("  Move emails:     python3 zoho-email.py move <source_folder> <target_folder> <id1> <id2> ...")
+        print("  Empty Spam:      python3 zoho-email.py empty-spam [--dry-run] [--execute]")
+        print("  Empty Trash:     python3 zoho-email.py empty-trash [--dry-run] [--execute]")
+        print("  Bulk action:     python3 zoho-email.py bulk-action --folder INBOX --search 'SUBJECT \"spam\"' --action mark-read [--dry-run]")
+        print("\nOAuth2 Commands:")
+        print("  Setup OAuth2:    python3 scripts/oauth-setup.py")
+        print("  Refresh tokens:  python3 zoho-email.py oauth-login [--token-file path]")
+        print("  Check status:    python3 zoho-email.py oauth-status [--token-file path]")
+        print("  Revoke tokens:   python3 zoho-email.py oauth-revoke [--token-file path]")
+        print("\nAuthentication:")
+        print("  --auth <method>      Authentication method: 'auto' (default), 'password', or 'oauth2'")
+        print("  --token-file <path>  OAuth2 token file path (default: ~/.clawdbot/zoho-mail-tokens.json)")
+        print("\nAPI Mode:")
+        print("  --api-mode <mode>    API mode: 'auto' (default), 'rest', or 'imap'")
+        print("                       'auto': Use REST API if available, fallback to IMAP")
+        print("                       'rest': Force REST API (requires OAuth2)")
+        print("                       'imap': Force IMAP/SMTP mode")
+        print("\nOptions:")
+        print("  --verbose, -v    Enable debug output")
+        print("  --dry-run        Preview bulk action without executing (bulk-action only)")
+        print("\nEnvironment:")
+        print("  ZOHO_EMAIL       Your Zoho email address (required for all auth methods)")
+        print("  ZOHO_PASSWORD    App-specific password (for password auth)")
+        print("  ZOHO_TIMEOUT     Connection timeout (default: 30s)")
+        print("  ZOHO_SEARCH_DAYS Limit search to recent N days (default: 30)")
+        sys.exit(0)
+
+    # Doctor / diagnostics (should not require valid credentials)
+    if command == "doctor":
+        # Determine token path (CLI flag wins)
+        effective_token_file = token_file or DEFAULT_TOKEN_PATH
+
+        def yn(val: bool) -> str:
+            return "yes" if val else "no"
+
+        report = {
+            "zoho_email_env_set": bool(os.environ.get("ZOHO_EMAIL")),
+            "zoho_password_env_set": bool(os.environ.get("ZOHO_PASSWORD")),
+            "token_file": os.path.expanduser(effective_token_file),
+            "token_file_exists": os.path.exists(os.path.expanduser(effective_token_file)),
+            "requests_installed": has_requests_library(),
+            "imap_server": IMAP_SERVER,
+            "imap_port": IMAP_PORT,
+            "smtp_server": SMTP_SERVER,
+            "smtp_port": SMTP_PORT,
+        }
+
+        # If token file exists, try to read basic status
+        if report["token_file_exists"]:
+            try:
+                tokens = load_oauth_tokens(effective_token_file)
+                report["token_file_readable"] = True
+                report["oauth_has_refresh_token"] = bool(tokens.get("refresh_token"))
+                report["oauth_access_token_present"] = bool(tokens.get("access_token"))
+                report["oauth_token_expired_or_expiring"] = is_token_expired(tokens) if report["oauth_access_token_present"] else None
+                report["oauth_client_id_present"] = bool(tokens.get("client_id"))
+                # Some token formats may store the mailbox/email; best-effort
+                report["oauth_email_in_token"] = bool(tokens.get("email") or tokens.get("user") or tokens.get("user_email"))
+            except Exception as e:
+                report["token_file_readable"] = False
+                report["token_file_error"] = str(e)
+
+        # Basic network reachability checks (no login)
+        def can_connect(host, port, timeout=5):
+            try:
+                sock = socket.create_connection((host, int(port)), timeout=timeout)
+                sock.close()
+                return True
+            except Exception:
+                return False
+
+        report["imap_reachable"] = can_connect(IMAP_SERVER, IMAP_PORT)
+        report["smtp_reachable"] = can_connect(SMTP_SERVER, SMTP_PORT)
+
+        # Basic REST reachability check (no auth)
+        def http_ok(url, timeout=8):
+            try:
+                import urllib.request
+                req = urllib.request.Request(url, method='GET')
+                with urllib.request.urlopen(req, timeout=timeout) as resp:
+                    return 200 <= int(getattr(resp, 'status', 200)) < 400
+            except Exception:
+                return False
+
+        report["rest_base_url"] = os.environ.get('ZOHO_API_BASE_URL', 'https://mail.zoho.com/api')
+        report["rest_reachable"] = http_ok(report["rest_base_url"].rstrip('/') + '/accounts') or http_ok('https://mail.zoho.com/')
+
+        # Human-friendly output
+        print("Zoho Email doctor\n")
+        print(f"- ZOHO_EMAIL set: {yn(report['zoho_email_env_set'])}")
+        print(f"- ZOHO_PASSWORD set (app password): {yn(report['zoho_password_env_set'])}")
+        print(f"- OAuth token file: {report['token_file']} (exists: {yn(report['token_file_exists'])})")
+        if report.get("token_file_exists"):
+            if report.get("token_file_readable") is True:
+                print(f"  - refresh_token present: {yn(report.get('oauth_has_refresh_token', False))}")
+                print(f"  - access_token present: {yn(report.get('oauth_access_token_present', False))}")
+                if report.get("oauth_token_expired_or_expiring") is not None:
+                    print(f"  - token expired/expiring soon: {yn(bool(report.get('oauth_token_expired_or_expiring')))}")
+            else:
+                print(f"  - token file unreadable: yes ({report.get('token_file_error')})")
+        print(f"- requests installed (needed for REST mode): {yn(report['requests_installed'])}")
+        print(f"- REST reachable ({report['rest_base_url']}): {yn(report['rest_reachable'])}")
+        print(f"- IMAP reachable ({IMAP_SERVER}:{IMAP_PORT}): {yn(report['imap_reachable'])}")
+        print(f"- SMTP reachable ({SMTP_SERVER}:{SMTP_PORT}): {yn(report['smtp_reachable'])}")
+
+        print("\nNext steps:")
+        if not report["zoho_email_env_set"]:
+            print("- Set your mailbox: export ZOHO_EMAIL='you@domain.com'")
+        if report["token_file_exists"] and report.get("token_file_readable") and report.get("oauth_has_refresh_token"):
+            print("- OAuth looks configured. Try: python3 scripts/zoho-email.py unread --api-mode rest")
+        else:
+            print("- To enable OAuth2 + REST mode (recommended): python3 scripts/oauth-setup.py")
+        if report["zoho_password_env_set"]:
+            print("- App-password mode is available. Try: python3 scripts/zoho-email.py unread --api-mode imap")
+        else:
+            print("- For app-password mode: export ZOHO_PASSWORD='<app-specific-password>'")
+
+        sys.exit(0)
+
     # Handle preview-html command without requiring credentials
     if command == "preview-html":
         html_input = sys.argv[2] if len(sys.argv) > 2 else None
@@ -1959,6 +2101,46 @@ if __name__ == "__main__":
             if result["failed"]:
                 print(f"\nWarning: {len(result['failed'])} emails failed to move", file=sys.stderr)
         
+        elif command == "empty-spam":
+            # Convenience wrapper around bulk-action.
+            # Default is DRY RUN for safety.
+            execute = '--execute' in sys.argv
+            dry_run = ('--dry-run' in sys.argv) or (not execute)
+
+            if dry_run:
+                print("🔍 DRY RUN: Will delete ALL emails in folder 'Spam'", file=sys.stderr)
+                print("   Tip: run with --execute to perform the deletion.", file=sys.stderr)
+            else:
+                print("⚠️  EXECUTING: Deleting ALL emails in folder 'Spam'", file=sys.stderr)
+
+            result = zoho.bulk_action("ALL", "delete", folder="Spam", dry_run=dry_run)
+            print(json.dumps(result, indent=2))
+
+            if dry_run and result.get("to_process", 0) > 0:
+                print("\n💡 To execute, re-run with: python3 zoho-email.py empty-spam --execute", file=sys.stderr)
+            elif not dry_run and result.get("failed"):
+                print(f"\nWarning: {len(result['failed'])} emails failed to delete", file=sys.stderr)
+
+        elif command == "empty-trash":
+            # Convenience wrapper around bulk-action.
+            # Default is DRY RUN for safety.
+            execute = '--execute' in sys.argv
+            dry_run = ('--dry-run' in sys.argv) or (not execute)
+
+            if dry_run:
+                print("🔍 DRY RUN: Will delete ALL emails in folder 'Trash'", file=sys.stderr)
+                print("   Tip: run with --execute to perform the deletion.", file=sys.stderr)
+            else:
+                print("⚠️  EXECUTING: Deleting ALL emails in folder 'Trash'", file=sys.stderr)
+
+            result = zoho.bulk_action("ALL", "delete", folder="Trash", dry_run=dry_run)
+            print(json.dumps(result, indent=2))
+
+            if dry_run and result.get("to_process", 0) > 0:
+                print("\n💡 To execute, re-run with: python3 zoho-email.py empty-trash --execute", file=sys.stderr)
+            elif not dry_run and result.get("failed"):
+                print(f"\nWarning: {len(result['failed'])} emails failed to delete", file=sys.stderr)
+
         elif command == "bulk-action":
             # Parse flags
             dry_run = '--dry-run' in sys.argv

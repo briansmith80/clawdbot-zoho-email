@@ -1,8 +1,8 @@
-# Security Advisory - Zoho Email Integration v2.2
+# Security Advisory - Zoho Email Integration
 
-## Security Fixes (2026-02-12)
+## Security Fixes in v2.2.1 (2026-02-12)
 
-This release addresses security issues identified in ClawHub security audit.
+This release addresses **three critical security vulnerabilities** identified in ClawHub security audits.
 
 ### Fixed Vulnerabilities
 
@@ -50,6 +50,57 @@ cp examples/clawdbot-extension/email-command-SECURE.js \
 - Checks token file permissions on handler initialization
 - Automatically corrects insecure permissions to 0600
 - Logs security warnings for visibility
+
+#### 5. Path Traversal in Attachment Download (CRITICAL)
+
+**Issue:** The `download_attachment()` function in `scripts/zoho-email.py` used untrusted attachment filenames directly for file writes, allowing arbitrary file write via malicious attachment names.
+
+**Attack Example:**
+An attacker could send an email with an attachment named:
+- `../../../../etc/cron.d/backdoor` - Write to system cron
+- `~/.ssh/authorized_keys` - Add SSH keys for persistence  
+- `../../.bashrc` - Execute code on shell login
+
+**Fix:** Implemented `_sanitize_filename()` function that:
+- Strips all directory path components (Windows and Unix)
+- Removes null bytes and dangerous characters
+- Prevents hidden files (leading dots)
+- Limits filename length to 200 characters
+- Returns safe basename only
+
+**Impact:** Prevents arbitrary file write, remote code execution, and privilege escalation through malicious email attachments.
+
+**Code Change:**
+```python
+# Before (VULNERABLE)
+if not output_path:
+    output_path = filename  # filename from email header - UNSAFE!
+with open(output_path, 'wb') as f:
+    f.write(payload)
+
+# After (SECURE)
+if not output_path:
+    safe_filename = self._sanitize_filename(raw_filename)
+    safe_output_path = safe_filename
+with open(safe_output_path, 'wb') as f:
+    f.write(payload)
+```
+
+#### 6. Command Injection in Test Script (HIGH)
+
+**Issue:** The `test-app-password.sh` script used `eval` to execute test commands with environment variables (`TEST_EMAIL`), allowing command injection if a malicious email address was provided.
+
+**Attack Example:**
+```bash
+TEST_EMAIL="user@example.com' ; rm -rf / ; echo '" ./test-app-password.sh
+```
+
+**Fix:** 
+1. Replaced `eval` with `bash -c` for safer command execution
+2. Added regex validation of `TEST_RECIPIENT` email format before any command execution
+3. Validation regex: `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
+
+**Impact:** Prevents arbitrary command execution during testing. Script now exits immediately if an invalid email address is detected.
 
 ---
 
@@ -150,15 +201,20 @@ Before deploying this skill:
 
 ## Changelog
 
+**v2.2.1 (2026-02-12)**
+- **[CRITICAL]** Fixed path traversal vulnerability in attachment download
+- **[CRITICAL]** Fixed command injection in JavaScript handler
+- **[HIGH]** Fixed command injection in test script (eval with untrusted input)
+- **[MEDIUM]** Added input sanitization and validation for all user inputs
+- **[LOW]** Added automatic token file permission enforcement
+- Updated metadata to accurately declare credential requirements
+- Added comprehensive security documentation (SECURITY.md)
+
 **v2.2.0 (2026-02-12)**
-- Fixed command injection vulnerability in JS handler
-- Added input sanitization and validation
-- Added automatic token permission enforcement
-- Updated metadata to accurately declare requirements
-- Added comprehensive security documentation
+- Initial security hardening (incomplete - use v2.2.1)
 
 **v2.1.0**
-- Original release with security issues
+- Original release with multiple critical security vulnerabilities
 
 ---
 

@@ -1,0 +1,141 @@
+{
+  "name": "zoho-email-integration",
+  "version": "2.2.1",
+  "description": "Complete Zoho Mail integration with OAuth2, REST API (5-10x faster), Clawdbot /email commands, HTML emails, attachments, and batch operations. Security-hardened against path traversal and command injection. Perfect for email automation and workflows.",
+  "author": "briansmith80",
+  "homepage": "https://github.com/briansmith80/clawdbot-zoho-email",
+  "license": "MIT",
+  "tags": [
+    "email",
+    "zoho",
+    "oauth2",
+    "rest-api",
+    "automation",
+    "messaging",
+    "clawdbot"
+  ],
+  "category": "integrations",
+  "credentials": {
+    "primary": "oauth2",
+    "alternatives": ["app-password"],
+    "required_env_vars": ["ZOHO_EMAIL"],
+    "optional_env_vars": ["ZOHO_PASSWORD"],
+    "token_files": [
+      {
+        "path": "~/.clawdbot/zoho-mail-tokens.json",
+        "permissions": "0600",
+        "contains": ["client_id", "client_secret", "access_token", "refresh_token"],
+        "sensitive": true
+      }
+    ],
+    "security_notes": [
+      "Use OAuth2 (recommended) or app-specific password (not main Zoho password)",
+      "Token file must have 0600 permissions (enforced automatically)",
+      "Never commit credentials to version control",
+      "Rotate credentials periodically"
+    ]
+  },
+  "dependencies": {
+    "python": ">=3.6",
+    "python_packages": ["requests"],
+    "optional_packages": []
+  },
+  "install": {
+    "type": "manual",
+    "steps": [
+      "Install Python dependencies: pip3 install requests",
+      "Run OAuth setup: python3 scripts/oauth-setup.py",
+      "OR set environment variables: ZOHO_EMAIL and ZOHO_PASSWORD",
+      "Test connection: python3 scripts/zoho-email.py unread"
+    ]
+  },
+  "usage": {
+    "cli": [
+      "python3 scripts/zoho-email.py unread",
+      "python3 scripts/zoho-email.py search 'invoice'",
+      "python3 scripts/zoho-email.py send to@example.com 'Subject' 'Body'"
+    ],
+    "clawdbot_commands": [
+      "/email unread",
+      "/email search invoice",
+      "/email send user@example.com 'Subject' 'Body'"
+    ]
+  },
+  "security": {
+    "audit_date": "2026-02-12",
+    "audit_status": "passed",
+    "known_issues": [],
+    "fixes": [
+      "v2.2.1: Fixed CRITICAL path traversal in attachment download",
+      "v2.2.1: Fixed HIGH command injection in test script",
+      "v2.2.1: Added filename sanitization (_sanitize_filename)",
+      "v2.2.1: Added email validation in test scripts",
+      "v2.2.0: Fixed command injection in JS handler",
+      "v2.2.0: Added input sanitization",
+      "v2.2.0: Added token permission enforcement",
+      "v2.2.0: Updated metadata accuracy"
+    ],
+    "security_contact": "brian@creativestudio.co.za",
+    "vulnerabilities_fixed": {
+      "CVE-equivalent": [
+        {
+          "severity": "CRITICAL",
+          "type": "Path Traversal",
+          "affected": "scripts/zoho-email.py (download_attachment)",
+          "fixed_in": "2.2.1",
+          "description": "Arbitrary file write via malicious attachment filename"
+        },
+        {
+          "severity": "CRITICAL",
+          "type": "Command Injection",
+          "affected": "examples/clawdbot-extension/email-command.js",
+          "fixed_in": "2.2.0",
+          "description": "Shell command injection via user arguments"
+        },
+        {
+          "severity": "HIGH",
+          "type": "Command Injection",
+          "affected": "test-app-password.sh",
+          "fixed_in": "2.2.1",
+          "description": "eval with untrusted environment variable"
+        }
+      ]
+    }
+  },
+  "compatibility": {
+    "openclaw": ">=2026.1.0",
+    "clawdbot": ">=2.0.0",
+    "platforms": ["linux", "macos", "windows"],
+    "node_versions": [">=14.0.0"]
+  },
+  "features": [
+    "OAuth2 authentication with automatic token refresh",
+    "REST API backend (5-10x faster than IMAP)",
+    "IMAP/SMTP fallback for compatibility",
+    "HTML email support with templates",
+    "File attachments (send and download)",
+    "Batch operations for bulk actions",
+    "Search with advanced filters",
+    "Clawdbot integration (/email commands)",
+    "Dry-run mode for safe testing"
+  ],
+  "files": {
+    "scripts": [
+      "scripts/zoho_email.py",
+      "scripts/zoho-email.py",
+      "scripts/oauth-setup.py",
+      "scripts/clawdbot_extension.py"
+    ],
+    "examples": [
+      "examples/clawdbot-extension/email-command.js",
+      "examples/clawdbot-extension/email-command-SECURE.js"
+    ],
+    "docs": [
+      "README.md",
+      "SKILL.md",
+      "OAUTH2_SETUP.md",
+      "SECURITY.md",
+      "CHANGELOG.md"
+    ]
+  }
+}

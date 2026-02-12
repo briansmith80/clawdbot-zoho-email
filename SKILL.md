@@ -2,11 +2,20 @@
 name: zoho-email-integration
 description: Complete Zoho Mail integration with OAuth2, REST API (5-10x faster), Clawdbot /email commands, HTML emails, attachments, and batch operations. Security-hardened against path traversal and command injection. Perfect for email automation and workflows.
 homepage: https://github.com/briansmith80/clawdbot-zoho-email
+metadata:
+  openclaw:
+    requires:
+      bins: ["python3"]
+      env: ["ZOHO_EMAIL"]
+    credentials:
+      primary: oauth2
+      alternatives: ["app-password"]
+      token_file: "~/.clawdbot/zoho-mail-tokens.json"
 ---
 
 # Zoho Email Integration
 
-**v2.2.1** - Complete Zoho Mail integration with OAuth2 authentication, REST API backend (5-10x faster than IMAP/SMTP), and **Clawdbot extension with /email commands for Telegram/Discord**. **Security-hardened** against path traversal and command injection. Supports HTML emails, attachments, batch operations, and advanced automation workflows.
+**v2.2.3** - Complete Zoho Mail integration with OAuth2 authentication, REST API backend (5-10x faster than IMAP/SMTP), and **Clawdbot extension with /email commands for Telegram/Discord**. **Security-hardened** against path traversal and command injection. Supports HTML emails, attachments, batch operations, and advanced automation workflows.
 
 Choose your authentication: OAuth2 (recommended, secure) or app password (simple setup).
 

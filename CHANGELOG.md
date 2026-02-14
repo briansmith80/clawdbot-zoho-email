@@ -5,6 +5,28 @@ All notable changes to the Zoho Email Integration skill will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.5] - 2026-02-14
+
+### 🔒 CRITICAL SECURITY FIX
+
+**Vulnerable JavaScript handler removed from distribution.**
+
+#### Fixed
+
+- **CRITICAL: Removed vulnerable email-command.js** - The examples/clawdbot-extension/ directory contained both a vulnerable (`email-command.js`) and secure (`email-command-SECURE.js`) version of the JavaScript command handler. The vulnerable file used `execSync` with shell interpolation, allowing command injection. The secure version using `spawn` with argument arrays is now the default `email-command.js`.
+
+  **Impact:** Remote code execution if the vulnerable handler was deployed and user input was processed through /email commands.
+  
+  **Fix:** 
+  - Deleted vulnerable `email-command.js` 
+  - Renamed `email-command-SECURE.js` to `email-command.js`
+  - Only the secure handler (using `spawn` with argument arrays) now ships
+
+#### Upgrade Urgency
+**IMMEDIATE** - If you deployed the JavaScript handler from examples/, replace it with the new secure version.
+
+---
+
 ## [2.2.1] - 2026-02-12
 
 ### 🔒 CRITICAL SECURITY FIXES

@@ -6,6 +6,24 @@ Supports: App passwords and OAuth2 authentication
 """
 
 import imaplib
+
+# --- FIX: Zoho IMAP servers in JP/non-US regions return \xc2\xa0 (NBSP) in CAPABILITY ---
+# The default encoding in imaplib is 'ascii', which crashes when Zoho JP returns a (NBSP) in CAPABILITY
+class PatchedIMAP4_SSL(imaplib.IMAP4_SSL):
+    def __init__(self, host='', port=imaplib.IMAP4_SSL_PORT, timeout=None, **kwargs):
+        super().__init__(host, port, timeout=timeout, **kwargs)
+
+def _get_capabilities(self):
+    old_enc = self._encoding
+    self._encoding = 'utf-8'
+    try:
+        super()._get_capabilities()
+    finally:
+        self._encoding = old_enc
+
+imaplib.IMAP4_SSL = PatchedIMAP4_SSL
+# ---------------------------------------------------------------------------------------
+
 import smtplib
 import email
 from email.mime.text import MIMEText

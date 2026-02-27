@@ -5,6 +5,20 @@ All notable changes to the Zoho Email Integration skill will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.8] - 2026-02-27
+
+### Fixed
+
+- **Zoho JP regional IMAP compatibility** — Fixed `UnicodeDecodeError` when connecting to `imap.zoho.jp` and other regional servers that return non-ASCII bytes (NBSP `\xc2\xa0`) in their CAPABILITY response during the initial TLS handshake.
+
+  **Root cause:** Python's `imaplib` uses ASCII decoding by default. Regional Zoho servers send a non-breaking space character in the CAPABILITY greeting, which crashes the ASCII decoder before authentication can begin.
+
+  **Fix:** `PatchedIMAP4_SSL` now overrides `open()` to set UTF-8 encoding before the server greeting is read. UTF-8 is a strict superset of ASCII, so this is fully backwards-compatible with all servers.
+
+  **Note:** v2.2.7 included a community contribution (thanks @SenorToru) that identified and described this bug correctly, but had an implementation error — `_get_capabilities` was defined as a standalone function and never bound to the class, making the fix a no-op. This release corrects that.
+
+---
+
 ## [2.2.5] - 2026-02-14
 
 ### 🔒 CRITICAL SECURITY FIX

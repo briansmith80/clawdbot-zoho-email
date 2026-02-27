@@ -8,18 +8,21 @@ Supports: App passwords and OAuth2 authentication
 import imaplib
 
 # --- FIX: Zoho IMAP servers in JP/non-US regions return \xc2\xa0 (NBSP) in CAPABILITY ---
-# The default encoding in imaplib is 'ascii', which crashes when Zoho JP returns a (NBSP) in CAPABILITY
+# Python's imaplib defaults to ASCII decoding. Zoho JP sends non-ASCII bytes during
+# the initial handshake, causing UnicodeDecodeError. We override open() to switch to
+# UTF-8 before the server greeting is read. UTF-8 is a strict superset of ASCII, so
+# this is safe for all servers — no revert required.
 class PatchedIMAP4_SSL(imaplib.IMAP4_SSL):
-    def __init__(self, host='', port=imaplib.IMAP4_SSL_PORT, timeout=None, **kwargs):
-        super().__init__(host, port, timeout=timeout, **kwargs)
-
-def _get_capabilities(self):
-    old_enc = self._encoding
-    self._encoding = 'utf-8'
-    try:
-        super()._get_capabilities()
-    finally:
-        self._encoding = old_enc
+    """
+    IMAP4_SSL subclass that handles non-ASCII bytes (e.g., NBSP \xc2\xa0) in server
+    CAPABILITY responses. Required for Zoho JP and other regional IMAP servers.
+    UTF-8 is a strict superset of ASCII — backwards-compatible with all servers.
+    """
+    def open(self, host='', port=imaplib.IMAP4_SSL_PORT, **kwargs):
+        """Set UTF-8 encoding before the TLS handshake so non-ASCII server
+        responses are decoded correctly instead of crashing with UnicodeDecodeError."""
+        self._encoding = 'utf-8'
+        super().open(host, port, **kwargs)
 
 imaplib.IMAP4_SSL = PatchedIMAP4_SSL
 # ---------------------------------------------------------------------------------------

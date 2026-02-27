@@ -1,12 +1,12 @@
 # Zoho Email Integration for Clawdbot
 
 [![GitHub](https://img.shields.io/badge/GitHub-clawdbot--zoho--email-blue?logo=github)](https://github.com/briansmith80/clawdbot-zoho-email)
-[![ClawdHub](https://img.shields.io/badge/ClawdHub-Install-green)](https://clawdhub.com)
+[![ClawHub](https://img.shields.io/badge/ClawHub-Install-green)](https://clawhub.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-2.2.8-blue)](https://github.com/briansmith80/clawdbot-zoho-email/releases)
+[![Version](https://img.shields.io/badge/version-2.2.9-blue)](https://github.com/briansmith80/clawdbot-zoho-email/releases)
 [![Security](https://img.shields.io/badge/security-hardened-brightgreen)](SECURITY.md)
 
-**v2.2.8** - Complete Zoho Mail integration with OAuth2, REST API backend (5-10x faster), **Clawdbot extension with /email commands**, and advanced email automation features. Perfect for email workflows, monitoring, and bulk operations in your Clawdbot projects.
+**v2.2.9** - Complete Zoho Mail integration with OAuth2, REST API backend (5-10x faster), **Clawdbot extension with /email commands**, and advanced email automation features. Perfect for email workflows, monitoring, and bulk operations in your Clawdbot projects.
 
 ## 🔒 Security Notice (v2.2.0)
 
@@ -24,8 +24,8 @@
 
 ```bash
 # 1) Install
-clawdhub install zoho-email
-cd zoho-email  # (or wherever ClawdHub installed it)
+clawhub install zoho-email-integration
+cd zoho-email-integration  # (or wherever ClawHub installed it)
 
 # 2) Install Python deps (needed for REST API mode)
 pip3 install -r requirements.txt
@@ -303,4 +303,4 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-**Part of the Clawdbot ecosystem** | [ClawdHub](https://clawdhub.com) | [Documentation](SKILL.md)
+**Part of the Clawdbot ecosystem** | [ClawHub](https://clawhub.com) | [Documentation](SKILL.md)

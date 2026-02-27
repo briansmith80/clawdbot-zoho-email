@@ -16,7 +16,7 @@ metadata:
 
 # Zoho Email Integration
 
-**v2.2.6** - Complete Zoho Mail integration with OAuth2 authentication, REST API backend (5-10x faster than IMAP/SMTP), and **Clawdbot extension with /email commands for Telegram/Discord**. **Security-hardened** against path traversal and command injection. Supports HTML emails, attachments, batch operations, and advanced automation workflows.
+**v2.2.8** - Complete Zoho Mail integration with OAuth2 authentication, REST API backend (5-10x faster than IMAP/SMTP), and **Clawdbot extension with /email commands for Telegram/Discord**. **Security-hardened** against path traversal and command injection. Supports HTML emails, attachments, batch operations, and advanced automation workflows.
 
 Choose your authentication: OAuth2 (recommended, secure) or app password (simple setup).
 
@@ -72,7 +72,7 @@ The vulnerable version used `execSync` with shell interpolation. The new version
 ## 📦 Installation
 
 ```bash
-clawdhub install zoho-email
+clawhub install zoho-email-integration
 ```
 
 **Requirements:**

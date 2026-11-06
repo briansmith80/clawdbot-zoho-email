@@ -1,0 +1,1 @@
+# Deployment guide - placeholder for GITHUB_COMMIT_MULTIPLE_FILES test

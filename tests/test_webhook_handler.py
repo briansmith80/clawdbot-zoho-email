@@ -1,0 +1,1 @@
+# Test suite for webhook handler - placeholder for GITHUB_COMMIT_MULTIPLE_FILES test

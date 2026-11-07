@@ -14,7 +14,7 @@ from zoho_webhook_handler import Outbox, Receiver, ClaireDelivery, MAX_BODY
 @pytest.fixture
 def setup(tmp_path):
     box = Outbox(tmp_path / 'events.db')
-    accounts = {'one': {'zuid': '11', 'secret': 'a' * 32}, 'two': {'zuid': '22', 'secret': 'b' * 32}}
+    accounts = {'one': {'account_id': '101', 'zuid': '11', 'secret': 'a' * 32}, 'two': {'account_id': '202', 'zuid': '22', 'secret': 'b' * 32}}
     return box, Receiver(accounts, box)
 
 def send(receiver, account='one', data=None, secret=None):
@@ -29,7 +29,7 @@ def rows(box):
 def test_official_shape_and_large_id(setup):
     box,r=setup
     assert send(r)==200
-    assert rows(box)[0][:2]==('one','9007199254740993')
+    assert rows(box)[0][:2]==('101','9007199254740993')
 
 @pytest.mark.parametrize('raw', [b'null', b'[]', b'1', b'"str"', b'{', b'\xff', b'{}', b'{"zuid":"11","messageId":true}'])
 def test_malformed(setup,raw):
@@ -96,7 +96,7 @@ def test_actual_authenticated_hook_contract():
     class Opener:
         def open(self,request,timeout):
             data=json.loads(request.data)
-            assert data['agentId']=='claire'
+            assert data['agentId']=='jlp-support'
             assert data['sessionMode']=='isolated' and data['deliver'] is False
             assert request.get_header('Authorization')=='Bearer '+'x'*32
             assert request.get_header('Idempotency-key')=='key'

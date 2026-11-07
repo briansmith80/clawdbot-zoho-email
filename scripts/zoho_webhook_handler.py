@@ -37,6 +37,8 @@ def identifier(value):
 class Outbox:
     def __init__(self, path):
         self.path = str(path)
+        if not Path(self.path).is_absolute():
+            raise ValueError('persistent absolute database path required')
         with self.connect() as db:
             db.execute('''CREATE TABLE IF NOT EXISTS events (
                 account TEXT NOT NULL, message TEXT NOT NULL,

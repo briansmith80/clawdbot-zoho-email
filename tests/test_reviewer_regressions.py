@@ -111,3 +111,7 @@ def test_crash_during_send_is_held(tmp_path):
     class MustNotSend:
         def send(self,*args):pytest.fail('crash must not resend')
     assert not Outbox(box.path).dispatch(MustNotSend())
+
+@pytest.mark.parametrize('path',[':memory:','events.db',''])
+def test_nonpersistent_or_ambiguous_ledger_path_rejected(path):
+    with pytest.raises(ValueError): Outbox(path)

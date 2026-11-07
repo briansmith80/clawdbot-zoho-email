@@ -79,7 +79,8 @@ Back up the database and preserve it on rollback; rollback must not replay rows.
 ## Local operation (only after above gates)
 
 Use an owner-only config file outside the checkout (chmod 600), owner-only state
-directory, persistent db_path, loopback listener and operator-managed TLS proxy.
+directory, absolute persistent db_path (relative and in-memory paths are rejected),
+loopback listener and operator-managed TLS proxy.
 No live services, cron, ingress or polling are modified by this PR.
 
 Config shape (values below are illustrative, not deployable credentials):
